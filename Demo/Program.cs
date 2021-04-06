@@ -1,4 +1,6 @@
-﻿namespace Stem.Demo
+﻿using Graphite;
+
+namespace Demo
 {
     class Program
     {
@@ -38,7 +40,6 @@
                     )
                 })
             );
-
         }
     }
 }

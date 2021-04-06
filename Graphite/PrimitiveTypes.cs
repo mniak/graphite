@@ -1,4 +1,4 @@
-﻿namespace Stem
+﻿namespace Graphite
 {
     public enum PrimitiveTypes
     {

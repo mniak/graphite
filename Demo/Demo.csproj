@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stem\Stem.csproj" />
+    <ProjectReference Include="..\Graphite\Graphite.csproj" />
   </ItemGroup>
 
 </Project>
