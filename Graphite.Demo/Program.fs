@@ -4,17 +4,6 @@ open System
 open Graphite.Core
 open Graphite
 
-// Define a function to construct a message to print
-let from whom =
-    sprintf "from %s" whom
-
-
-//#include <stdio.h>
-//void main() {
-//    printf("Hello, World!");
-//}
-
-
 [<EntryPoint>]
 let main argv =
     let printfParam0 = { name="text"; ``type``=PrimitiveType.String }
