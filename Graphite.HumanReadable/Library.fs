@@ -12,7 +12,7 @@ let SerializeStatement statement =
         | MethodDeclaration.External e -> e.name
         + "("
         + (inv.arguments 
-            |> Seq.map (fun arg -> 
+            |> List.map (fun arg -> 
                 arg.parameter.name
                 + "="
                 + SerializeValue(arg.value)) 
@@ -22,5 +22,5 @@ let SerializeStatement statement =
 
 let SerializeSyntax syntax = 
     syntax.entrypoint
-    |> Seq.map SerializeStatement
+    |> List.map SerializeStatement
     |> String.concat Environment.NewLine
