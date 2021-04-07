@@ -1,14 +1,4 @@
 ﻿namespace Graphite
 {
-    public class MethodInvocation
-    {
-        private Method method;
-        private Argument[] argumentList;
-
-        public MethodInvocation(Method method, Argument[] argumentList)
-        {
-            this.method = method;
-            this.argumentList = argumentList;
-        }
-    }
+    public record MethodInvocation(IMethodDeclaration method, Argument[] arguments) : IStatement { }
 }
