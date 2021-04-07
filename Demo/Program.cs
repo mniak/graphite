@@ -1,4 +1,5 @@
-﻿using Graphite;
+﻿using Graphite.Core;
+using System;
 
 namespace Demo
 {
@@ -17,29 +18,36 @@ namespace Demo
                     printf("Hello, World!");
                 }
             */
-            var printfParam0 = new Parameter(
-                type: PrimitiveTypes.String,
+            var printfParam0 = new MethodParameterDeclaration(
+                type: PrimitiveType.String,
                 name: "text"
             );
-            var printf = new Method("printf", new[] { printfParam0 });
-            var standardLibrary = new Library(
+            var printf = new ExternalMethodDeclaration("printf", new[] { printfParam0 });
+            var standardLibrary = new ExternalLibraryDeclaration(
                 name: "stdlib",
-                modules: new[] { new Module("io", new[] { printf }) }
+                modules: new[] { new ExternalModuleDeclaration("io", new[] { printf }) }
             );
-            var syntax = new SyntaxGraph(
+            var syntax = new Graphite.Core.Program(
                 libraries: new[] { standardLibrary },
-                entrypoint: new Block(new[] {
-                    new MethodInvocation(
-                        method: printf,
-                        argumentList: new[] {
+                entrypoint: new Statement[] {
+                    Statement.NewMethod(new MethodInvocation(
+                        method: MethodDeclaration.NewExternal(printf),
+                        arguments: new[] {
                             new Argument(
                                 parameter: printfParam0,
-                                value: new StringLiteral("Hello, World!")
+                                value: "Hello, World!"
                             )
                         }
-                    )
-                })
+                    )),
+                }
             );
+
+
+            //var renderer = new HumanReadableSerializer();
+            //var csharpCode = renderer.SerializeSyntax(syntax);
+
+            //Console.WriteLine(csharpCode);
+            Console.ReadLine();
         }
     }
 }
