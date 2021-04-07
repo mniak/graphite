@@ -32,6 +32,6 @@ type Argument = { parameter: MethodParameterDeclaration; value: Value }
 type MethodInvocation = { method: MethodDeclaration; arguments: array<Argument> }
 
 type Statement =
-    | Method of MethodInvocation
+    | Invocation of MethodInvocation
 
 type Program = { libraries:array<ExternalLibraryDeclaration>; entrypoint: array<Statement> }

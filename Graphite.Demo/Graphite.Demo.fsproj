@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Graphite.Core\Graphite.Core.fsproj" />
     <ProjectReference Include="..\Graphite.HumanReadable\Graphite.HumanReadable.fsproj" />
   </ItemGroup>

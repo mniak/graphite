@@ -1,5 +1,4 @@
-﻿using Graphite;
-using Graphite.Serialization.HumanReadable;
+﻿using Graphite.Core;
 using System;
 
 namespace Demo
@@ -28,25 +27,26 @@ namespace Demo
                 name: "stdlib",
                 modules: new[] { new ExternalModuleDeclaration("io", new[] { printf }) }
             );
-            var syntax = new Graphite.Program(
+            var syntax = new Graphite.Core.Program(
                 libraries: new[] { standardLibrary },
-                entrypoint: new IStatement[] {
-                    new MethodInvocation(
-                        method: printf,
+                entrypoint: new Statement[] {
+                    Statement.NewMethod(new MethodInvocation(
+                        method: MethodDeclaration.NewExternal(printf),
                         arguments: new[] {
                             new Argument(
                                 parameter: printfParam0,
-                                value: new StringLiteral("Hello, World!")
+                                value: "Hello, World!"
                             )
                         }
-                    ),
+                    )),
                 }
             );
 
-            var renderer = new HumanReadableSerializer();
-            var csharpCode = renderer.SerializeSyntax(syntax);
 
-            Console.WriteLine(csharpCode);
+            //var renderer = new HumanReadableSerializer();
+            //var csharpCode = renderer.SerializeSyntax(syntax);
+
+            //Console.WriteLine(csharpCode);
             Console.ReadLine();
         }
     }
