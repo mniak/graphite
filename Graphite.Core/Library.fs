@@ -1,4 +1,4 @@
-﻿namespace Graphite.Core
+﻿module Graphite.Core
 
 type PrimitiveType = String
 type Type = PrimitiveType
