@@ -8,11 +8,11 @@ let SerializeStatement statement =
     match statement with
     | Invocation inv ->
         match inv.method with
-        | MethodDeclaration.Internal i -> i.name
+        //| MethodDeclaration.Internal i -> i.name
         | MethodDeclaration.External e -> e.name
         + "("
         + (inv.arguments 
-            |> Array.map (fun arg -> 
+            |> Seq.map (fun arg -> 
                 arg.parameter.name
                 + "="
                 + SerializeValue(arg.value)) 
@@ -22,5 +22,5 @@ let SerializeStatement statement =
 
 let SerializeSyntax syntax = 
     syntax.entrypoint
-    |> Array.map SerializeStatement
+    |> Seq.map SerializeStatement
     |> String.concat Environment.NewLine

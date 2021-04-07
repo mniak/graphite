@@ -5,13 +5,13 @@ type Type = PrimitiveType
 
 type MethodParameterDeclaration = { name: string; ``type``: Type }
 
-//type InternalMethodDeclaration = { name: string; parameters: array<MethodParameterDeclaration>; statements: array<Statement> }
-//type InternalModuleDeclaration = { name: string; methods: array<InternalMethodDeclaration> }
-//type InternalLibraryDeclaration = { name: string; modules: array<InternalModuleDeclaration> }
+//type InternalMethodDeclaration = { name: string; parameters: list<MethodParameterDeclaration>; statements: list<Statement> }
+//type InternalModuleDeclaration = { name: string; methods: list<InternalMethodDeclaration> }
+//type InternalLibraryDeclaration = { name: string; modules: list<InternalModuleDeclaration> }
 
-type ExternalMethodDeclaration = { name: string; parameters: array<MethodParameterDeclaration> }
-type ExternalModuleDeclaration = { name: string; methods: array<ExternalMethodDeclaration> }
-type ExternalLibraryDeclaration = { name: string; modules: array<ExternalModuleDeclaration> }
+type ExternalMethodDeclaration = { name: string; parameters: list<MethodParameterDeclaration> }
+type ExternalModuleDeclaration = { name: string; methods: list<ExternalMethodDeclaration> }
+type ExternalLibraryDeclaration = { name: string; modules: list<ExternalModuleDeclaration> }
 
 type MethodDeclaration = 
     //| Internal of InternalMethodDeclaration 
@@ -29,9 +29,9 @@ type StringLiteral = string
 type Value = StringLiteral
 
 type Argument = { parameter: MethodParameterDeclaration; value: Value }
-type MethodInvocation = { method: MethodDeclaration; arguments: array<Argument> }
+type MethodInvocation = { method: MethodDeclaration; arguments: list<Argument> }
 
 type Statement =
     | Invocation of MethodInvocation
 
-type Program = { libraries:array<ExternalLibraryDeclaration>; entrypoint: array<Statement> }
+type Program = { libraries:list<ExternalLibraryDeclaration>; entrypoint: list<Statement> }
