@@ -11,6 +11,7 @@ add_definitions(${LLVM_DEFINITIONS})
 # End of LLVM - PART A
 
 add_library(graphite graphite.cpp)
+target_include_directories (graphite PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # LLVM - PART B
 llvm_map_components_to_libnames(llvm_libs support core irreader)

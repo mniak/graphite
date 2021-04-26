@@ -5,3 +5,5 @@ include(CTest)
 enable_testing()
 
 add_executable(graphite-demo demo.cpp)
+
+target_link_libraries (graphite-demo LINK_PUBLIC graphite)
