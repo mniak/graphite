@@ -10,7 +10,8 @@ include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 # End of LLVM - PART A
 
-add_library(graphite graphite.cpp)
+file(GLOB CPP_FILES *.cpp)
+add_library(graphite ${CPP_FILES})
 target_include_directories (graphite PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # LLVM - PART B
