@@ -1,4 +1,4 @@
-package demo_serializer
+package serialization
 
 import (
 	"fmt"

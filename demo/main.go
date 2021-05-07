@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/mniak/graphite/demo_serializer"
+	"github.com/mniak/graphite/demo/serialization"
 	"log"
 )
 import "github.com/mniak/graphite"
@@ -50,7 +50,7 @@ func main() {
 			},
 		},
 	}
-	code, err := demo_serializer.SerializeProgram(program)
+	code, err := serialization.SerializeProgram(program)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
