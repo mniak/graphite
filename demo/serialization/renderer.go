@@ -7,15 +7,7 @@ import (
 )
 
 func SerializeProgram(program graphite.Program) (string, error) {
-	var err error
-	statements := make([]string, len(program.Entrypoint))
-	for i, s := range program.Entrypoint {
-		statements[i], err = serializeStatement(s)
-		if err != nil {
-			return "", err
-		}
-	}
-	return strings.Join(statements, "\n"), nil
+	return serializeStatement(program.entrypoin)
 }
 
 func serializeStatement(s graphite.IStatement) (string, error) {
@@ -34,7 +26,7 @@ func serializeMethodInvocation(mi graphite.MethodInvocation) (string, error) {
 	for _, arg := range mi.Arguments {
 		sb.WriteString(arg.Parameter.Name)
 		sb.WriteString("=")
-		value, err := SerializeValue(arg.Value)
+		value, err := serializeValue(arg.Value)
 		if err != nil {
 			return "", err
 		}
@@ -44,7 +36,7 @@ func serializeMethodInvocation(mi graphite.MethodInvocation) (string, error) {
 	return sb.String(), nil
 }
 
-func SerializeValue(v graphite.IValue) (string, error) {
+func serializeValue(v graphite.IValue) (string, error) {
 	switch vt := v.(type) {
 	case graphite.StringLiteral:
 		return vt.Value, nil

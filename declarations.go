@@ -2,16 +2,22 @@ package graphite
 
 type ModuleDeclaration struct {
 	name    string
-	methods []MethodDeclaration
-}
-type MethodDeclaration struct {
-	name       string
-	parameters []MethodParameterDeclaration
-	statement  IStatement
+	methods []methodDeclaration
 }
 
-func (m MethodDeclaration) GetName() string {
+func MethodDeclaration(name string, parameters []MethodParameterDeclaration, statement statement) methodDeclaration {
+	return methodDeclaration{
+		name:       name,
+		parameters: parameters,
+		statement:  statement,
+	}
+}
+func (m methodDeclaration) GetName() string {
 	return m.name
+}
+
+func (m *methodDeclaration) Invocation(args []Argument) statement {
+	return MethodInvocation(m, args)
 }
 
 type MethodParameterDeclaration struct {
@@ -36,6 +42,12 @@ func (e ExternalMethodDeclaration) GetName() string {
 	return e.Name
 }
 
-type IMethodDeclaration interface {
-	GetName() string
+type methodDeclaration struct {
+	name       string
+	parameters []MethodParameterDeclaration
+	statement  statement
+}
+
+func (m methodDeclaration) ReturnType() Type {
+	return m.statement.ReturnType()
 }
