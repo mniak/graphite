@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/demo/serialization"
+	"github.com/mniak/graphite/impl"
+	"github.com/mniak/graphite/native"
 	"log"
 )
 
@@ -17,43 +19,28 @@ func main() {
 			return f(10, 20);
 		}
 	*/
-
-	paramA := graphite.MethodParameterDeclaration{
-		Name:    "a",
-		TheType: graphite.TypeInt32(),
-	}
-	paramB := graphite.MethodParameterDeclaration{
-		Name:    "b",
-		TheType: graphite.TypeInt32(),
-	}
-	methodF := graphite.MethodDeclaration(
+	paramA := impl.NewParameter("a", native.TypeInt32())
+	paramB := impl.NewParameter("b", native.TypeInt32())
+	methodF := impl.NewInternalMethod(
 		"f",
-		[]graphite.MethodParameterDeclaration{paramA, paramB},
-		graphite.BinaryOperation(
-			"+",
-			graphite.ValueFromParameter(paramA),
-			graphite.BinaryOperation(
-				"x",
-				2,
-				graphite.ValueFromParameter(paramB),
+		[]graphite.Parameter{paramA, paramB},
+		native.Int32Add(
+			impl.ValueFromParameter(paramA),
+			native.Int32Mult(
+				native.Int32(2),
+				impl.ValueFromParameter(paramB),
 			),
 		),
 	)
 
-	entryPoint := methodF.Invocation([]graphite.Argument{
-		{
-			Parameter: paramA,
-			Value:     graphite.Int32Literal{Value: 10},
-		},
-		{
-			Parameter: paramB,
-			Value:     graphite.Int32Literal{Value: 20},
-		},
+	entryPoint := impl.NewInvocation(&methodF, []graphite.Argument{
+		impl.NewArgument(paramA, native.Int32(10)),
+		impl.NewArgument(paramB, native.Int32(20)),
 	})
 
-	program := graphite.ProgramWithoutLibraries(entryPoint)
+	program := impl.ProgramWithoutLibraries(entryPoint)
 
-	code, err := serialization.SerializeProgram(program)
+	code, err := serialization.Serialize(program)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}

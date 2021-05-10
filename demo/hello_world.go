@@ -26,7 +26,7 @@ package main
 //		},
 //	}
 //	standardLibrary := graphite.ExternalLibraryDeclaration{
-//		Name: "stdlib",
+//		Name: "native]",
 //		Modules: []graphite.ExternalModuleDeclaration{
 //			{
 //				Name: "io",

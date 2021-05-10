@@ -1,53 +1,21 @@
 package graphite
 
-type ModuleDeclaration struct {
-	name    string
-	methods []methodDeclaration
+type Program interface {
+	Dispatcher
+	Entrypoint() Value
 }
 
-func MethodDeclaration(name string, parameters []MethodParameterDeclaration, statement statement) methodDeclaration {
-	return methodDeclaration{
-		name:       name,
-		parameters: parameters,
-		statement:  statement,
-	}
-}
-func (m methodDeclaration) GetName() string {
-	return m.name
+type Method interface {
+	Name() string
+	Parameters() []Parameter
+	ReturnType() Type
 }
 
-func (m *methodDeclaration) Invocation(args []Argument) statement {
-	return MethodInvocation(m, args)
+type Parameter interface {
+	Name() string
+	ReturnType() Type
 }
 
-type MethodParameterDeclaration struct {
-	Name    string
-	TheType Type
-}
-
-type ExternalLibraryDeclaration struct {
-	Name    string
-	Modules []ExternalModuleDeclaration
-}
-type ExternalModuleDeclaration struct {
-	Name    string
-	Methods []ExternalMethodDeclaration
-}
-type ExternalMethodDeclaration struct {
-	Name       string
-	Parameters []MethodParameterDeclaration
-}
-
-func (e ExternalMethodDeclaration) GetName() string {
-	return e.Name
-}
-
-type methodDeclaration struct {
-	name       string
-	parameters []MethodParameterDeclaration
-	statement  statement
-}
-
-func (m methodDeclaration) ReturnType() Type {
-	return m.statement.ReturnType()
+type Type interface {
+	Name() string
 }
