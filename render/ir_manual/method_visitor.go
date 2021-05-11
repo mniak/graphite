@@ -1,4 +1,4 @@
-package manIR
+package ir_manual
 
 import (
 	fmt "fmt"

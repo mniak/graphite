@@ -4,8 +4,8 @@ import (
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/impl"
 	"github.com/mniak/graphite/native"
+	"github.com/mniak/graphite/render/ir_manual"
 	"github.com/mniak/graphite/render/lisp"
-	"github.com/mniak/graphite/render/manIR"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -45,7 +45,7 @@ func MakeProgram() graphite.Program {
 
 func TestIR(t *testing.T) {
 	program := MakeProgram()
-	code, err := manIR.SerializeProgram(program)
+	code, err := ir_manual.SerializeProgram(program)
 	assert.NoError(t, err)
 	assert.Equal(t, `define i32 @f(i32 %param_a, i32 %param_b) {
   %var_1 = mul i32 2, %param_b
