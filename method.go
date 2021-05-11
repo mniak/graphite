@@ -5,6 +5,7 @@ type MethodDispatcher interface {
 }
 type MethodVisitor interface {
 	VisitInternalMethod(m InternalMethod) error
+	VisitNativeOperation(m NativeOperation) error
 }
 
 type Method interface {
@@ -19,6 +20,6 @@ type InternalMethod interface {
 	Method
 	Body() Value
 }
-type NativeOperator interface {
+type NativeOperation interface {
 	Method
 }

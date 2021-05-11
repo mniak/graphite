@@ -52,6 +52,9 @@ func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 
 	v.Dedent()
 	v.WriteString("}\n")
-
 	return err
+}
+
+func (v *methodVisitor) VisitNativeOperation(m graphite.NativeOperation) error {
+	return nil
 }

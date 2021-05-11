@@ -5,54 +5,54 @@ import (
 	"github.com/mniak/graphite/impl"
 )
 
-type binaryOperator struct {
+type binaryOperation struct {
 	name   string
 	aType  graphite.Type
 	bType  graphite.Type
 	native bool
 }
 
-func (o *binaryOperator) IsNative() bool {
+func (o *binaryOperation) IsNative() bool {
 	return o.native
 }
 
-func (o *binaryOperator) AcceptMethodVisitor(visitor graphite.MethodVisitor) error {
-	return visitor.VisitNativeOperator(o)
+func (o *binaryOperation) AcceptMethodVisitor(visitor graphite.MethodVisitor) error {
+	return visitor.VisitNativeOperation(o)
 }
 
-func (o *binaryOperator) Parameters() []graphite.Parameter {
+func (o *binaryOperation) Parameters() []graphite.Parameter {
 	return []graphite.Parameter{
 		impl.NewParameter("a", TypeInt32()),
 		impl.NewParameter("b", TypeInt32()),
 	}
 }
 
-func (o *binaryOperator) Name() string {
+func (o *binaryOperation) Name() string {
 	return o.name
 }
 
-func (o *binaryOperator) ReturnType() graphite.Type {
+func (o *binaryOperation) ReturnType() graphite.Type {
 	return TypeInt32()
 }
 
-var int32Mult = binaryOperator{
+var int32Mult = binaryOperation{
 	name:   "*",
 	aType:  TypeInt32(),
 	bType:  TypeInt32(),
 	native: true,
 }
 
-var int32Add = binaryOperator{
+var int32Add = binaryOperation{
 	name:   "+",
 	aType:  TypeInt32(),
 	bType:  TypeInt32(),
 	native: true,
 }
 
-func OperatorInt32Addition() *binaryOperator {
+func OperatorInt32Addition() *binaryOperation {
 	return &int32Add
 }
 
-func OperatorInt32Multiplication() *binaryOperator {
+func OperatorInt32Multiplication() *binaryOperation {
 	return &int32Mult
 }

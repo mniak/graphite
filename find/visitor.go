@@ -54,6 +54,14 @@ func (v *findVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	return nil
 }
 
+func (v *findVisitor) VisitNativeOperation(o graphite.NativeOperation) error {
+	v.check(o)
+	for _, param := range o.Parameters() {
+		v.check(param)
+	}
+	return nil
+}
+
 func (v *findVisitor) findInArgument(a graphite.Argument) error {
 	v.check(a)
 	v.check(a.Parameter())
