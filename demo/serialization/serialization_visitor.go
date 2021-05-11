@@ -27,11 +27,6 @@ func (v *visitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	return err
 }
 
-func (v *visitor) VisitNativeOperator(o graphite.NativeOperator) error {
-	v.sb.WriteString("<native operator/>\n")
-	return nil
-}
-
 func (v *visitor) VisitInvocation(mi graphite.Invocation) error {
 	args := mi.Arguments()
 	v.sb.WriteString(fmt.Sprintf("INVOKE %s (", mi.Method().Name()))

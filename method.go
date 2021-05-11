@@ -5,7 +5,6 @@ type MethodDispatcher interface {
 }
 type MethodVisitor interface {
 	VisitInternalMethod(m InternalMethod) error
-	VisitNativeOperator(o NativeOperator) error
 }
 
 type Method interface {

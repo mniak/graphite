@@ -1,6 +1,7 @@
 package manIR
 
 import (
+	"fmt"
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/find"
 	"github.com/pkg/errors"
@@ -33,10 +34,11 @@ func (v *programVisitor) serializeProgram(program graphite.Program) error {
 
 	v.sb.WriteString("\n")
 
-	methodVisitor := methodVisitor{
+	valueVisitor := valueVisitor{
 		parent: v,
 	}
-	err = program.Entrypoint().AcceptValueVisitor(&methodVisitor)
+	err = program.Entrypoint().AcceptValueVisitor(&valueVisitor)
+	v.sb.WriteString(fmt.Sprintf("; ret %s\n", valueVisitor.lastExpression))
 	if err != nil {
 		return errors.Wrap(err, "failed to serialize statement")
 	}
