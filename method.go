@@ -17,6 +17,7 @@ type Method interface {
 
 type InternalMethod interface {
 	Method
+	Body() Value
 }
 type NativeOperator interface {
 	Method

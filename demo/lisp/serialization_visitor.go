@@ -1,4 +1,4 @@
-package serialization
+package lisp
 
 import (
 	"fmt"
@@ -16,14 +16,25 @@ func (v *visitor) String() string {
 }
 
 func (v *visitor) VisitInternalMethod(m graphite.InternalMethod) error {
-	v.sb.WriteString(fmt.Sprintf("DECL %s (", m.Name()))
-	for _, param := range m.Parameters() {
-		v.serializeParameter(param)
+	v.sb.WriteString(fmt.Sprintf("(defun %s (", m.Name()))
+	params := m.Parameters()
+	first := true
+	for _, param := range params {
+		if first {
+			first = false
+		} else {
+			v.sb.WriteString(" ")
+		}
+		v.sb.WriteString(param.Name())
 	}
-	v.sb.WriteString(fmt.Sprintf(") -> %s\n", m.ReturnType().Name()))
+	v.sb.WriteString(")\n")
 	v.sb.Indent()
+
 	err := m.Body().AcceptValueVisitor(v)
+
 	v.sb.Dedent()
+	v.sb.WriteString(")\n")
+
 	return err
 }
 
@@ -34,14 +45,16 @@ func (v *visitor) VisitNativeOperator(o graphite.NativeOperator) error {
 
 func (v *visitor) VisitInvocation(mi graphite.Invocation) error {
 	args := mi.Arguments()
-	v.sb.WriteString(fmt.Sprintf("INVOKE %s (", mi.Method().Name()))
+	v.sb.WriteString("(")
+	v.sb.WriteString(mi.Method().Name())
 	for _, arg := range args {
+		v.sb.WriteString(" ")
 		err := v.serializeArgument(arg)
 		if err != nil {
 			return errors.Wrap(err, "failed to serialize argument")
 		}
 	}
-	v.sb.WriteString(fmt.Sprintf(") -> %s", mi.Method().ReturnType().Name()))
+	v.sb.WriteString(")")
 	return nil
 }
 
@@ -51,18 +64,14 @@ func (v *visitor) VisitInt32Literal(i int32) error {
 }
 
 func (v *visitor) VisitParameterValue(pv graphite.ParameterValue) error {
-	v.sb.WriteString(fmt.Sprintf("[param] %s", pv.Parameter().Name()))
+	v.sb.WriteString(pv.Parameter().Name())
 	return nil
 }
 
 func (v *visitor) serializeArgument(a graphite.Argument) error {
-	v.sb.WriteString(fmt.Sprintf("{%s = ", a.Parameter().Name()))
-	defer v.sb.WriteString("}")
 	return a.Value().AcceptValueVisitor(v)
 }
 func (v *visitor) serializeProgram(program graphite.Program) error {
-	v.sb.WriteString(":DECLARATIONS\n")
-	v.sb.Indent()
 	methods, err := find.Methods(program)
 	if err != nil {
 		return errors.Wrap(err, "error finding methods")
@@ -73,21 +82,14 @@ func (v *visitor) serializeProgram(program graphite.Program) error {
 		if err != nil {
 			return errors.Wrap(err, "error serializing method")
 		}
+
 	}
 
-	v.sb.Dedent()
 	v.sb.WriteString("\n")
 
-	v.sb.WriteString(":BODY\n")
-	v.sb.Indent()
 	err = program.Entrypoint().AcceptValueVisitor(v)
-	v.sb.Dedent()
 	if err != nil {
 		return errors.Wrap(err, "failed to serialize statement")
 	}
 	return nil
-}
-
-func (v *visitor) serializeParameter(p graphite.Parameter) {
-	v.sb.WriteString(fmt.Sprintf("{[%s] %s}", p.ReturnType().Name(), p.Name()))
 }

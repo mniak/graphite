@@ -8,6 +8,10 @@ type internalMethod struct {
 	statement  graphite.Value
 }
 
+func (m *internalMethod) Body() graphite.Value {
+	return m.statement
+}
+
 func (m *internalMethod) AcceptMethodVisitor(visitor graphite.MethodVisitor) error {
 	return visitor.VisitInternalMethod(m)
 }
