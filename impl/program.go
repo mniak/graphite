@@ -9,10 +9,6 @@ type program struct {
 	entrypoint graphite.Value
 }
 
-func (p program) Accept(visitor graphite.Visitor) error {
-	return visitor.VisitProgram(p)
-}
-
 func (p program) Entrypoint() graphite.Value {
 	return p.entrypoint
 }

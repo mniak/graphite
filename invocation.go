@@ -6,7 +6,6 @@ type Invocation interface {
 	Arguments() []Argument
 }
 type Argument interface {
-	Dispatcher
 	Parameter() Parameter
 	Value() Value
 }

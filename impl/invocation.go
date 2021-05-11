@@ -15,8 +15,8 @@ func (i invocation) Method() graphite.Method {
 	return i.method
 }
 
-func (i invocation) Accept(visitor graphite.Visitor) error {
-	return visitor.VisitMethodInvocation(i)
+func (i invocation) AcceptValueVisitor(visitor graphite.ValueVisitor) error {
+	return visitor.VisitInvocation(i)
 }
 
 func (i invocation) ReturnType() graphite.Type {

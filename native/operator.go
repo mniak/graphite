@@ -11,6 +11,10 @@ type binaryOperator struct {
 	bType graphite.Type
 }
 
+func (o *binaryOperator) AcceptMethodVisitor(visitor graphite.MethodVisitor) error {
+	return visitor.VisitNativeOperator(o)
+}
+
 func (o *binaryOperator) Parameters() []graphite.Parameter {
 	return []graphite.Parameter{
 		impl.NewParameter("a", TypeInt32()),
@@ -38,10 +42,10 @@ var int32Add = binaryOperator{
 	bType: TypeInt32(),
 }
 
-func OperatorInt32Addition() graphite.Method {
+func OperatorInt32Addition() *binaryOperator {
 	return &int32Add
 }
 
-func OperatorInt32Multiplication() graphite.Method {
+func OperatorInt32Multiplication() *binaryOperator {
 	return &int32Mult
 }

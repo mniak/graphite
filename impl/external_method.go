@@ -3,7 +3,7 @@ package impl
 //
 //type externalMethod struct {
 //	Name       string
-//	Parameters []methodParameter
+//	Parameters []parameter
 //}
 
 //func (e externalMethod) GetName() string {

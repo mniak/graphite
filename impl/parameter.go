@@ -2,21 +2,21 @@ package impl
 
 import "github.com/mniak/graphite"
 
-type methodParameter struct {
+type parameter struct {
 	name    string
 	theType graphite.Type
 }
 
-func (m methodParameter) Name() string {
-	return m.name
+func (p parameter) Name() string {
+	return p.name
 }
 
-func (m methodParameter) ReturnType() graphite.Type {
-	return m.theType
+func (p parameter) ReturnType() graphite.Type {
+	return p.theType
 }
 
-func NewParameter(name string, theType graphite.Type) methodParameter {
-	return methodParameter{
+func NewParameter(name string, theType graphite.Type) parameter {
+	return parameter{
 		name:    name,
 		theType: theType,
 	}

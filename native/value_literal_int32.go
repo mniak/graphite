@@ -8,7 +8,7 @@ type int32Literal struct {
 	value int32
 }
 
-func (i int32Literal) Accept(visitor graphite.Visitor) error {
+func (i int32Literal) AcceptValueVisitor(visitor graphite.ValueVisitor) error {
 	return visitor.VisitInt32Literal(i.value)
 }
 

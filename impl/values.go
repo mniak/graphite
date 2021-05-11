@@ -10,7 +10,7 @@ func (p parameterValue) Parameter() graphite.Parameter {
 	return p.param
 }
 
-func (p parameterValue) Accept(visitor graphite.Visitor) error {
+func (p parameterValue) AcceptValueVisitor(visitor graphite.ValueVisitor) error {
 	return visitor.VisitParameterValue(p)
 }
 

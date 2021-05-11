@@ -7,7 +7,7 @@ import (
 
 func TestInterface(t *testing.T) {
 	var theType visitor
-	var theInteface graphite.Visitor
+	var theInteface graphite.AllVisitors
 
 	theInteface = &theType
 	_ = theInteface
