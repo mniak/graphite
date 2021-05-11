@@ -9,3 +9,7 @@ func formatVariableName(name string) string {
 func formatParameterName(name string) string {
 	return fmt.Sprintf("%%param_%s", name)
 }
+
+func formatFunctionName(name string) string {
+	return fmt.Sprintf("@%s", name)
+}

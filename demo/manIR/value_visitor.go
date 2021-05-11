@@ -10,8 +10,8 @@ import (
 
 type valueVisitor struct {
 	parent         *programVisitor
-	lastExpression string
 	varcount       int
+	lastExpression string
 }
 
 func (v *valueVisitor) WriteString(str string) {
@@ -34,25 +34,42 @@ func (v *valueVisitor) newvar() string {
 
 func (v *valueVisitor) VisitInvocation(mi graphite.Invocation) error {
 	varname := v.newvar()
+	method := mi.Method()
+	native := method.IsNative()
 
 	args := mi.Arguments()
 	args2 := make([]string, len(args))
 	for i, arg := range args {
-		arg.Value().AcceptValueVisitor(v)
-		args2[i] = v.lastExpression
+		value := arg.Value()
+		err := value.AcceptValueVisitor(v)
+		if err != nil {
+			return errors.Wrap(err, "failed to serialize argument")
+		}
+		irType, err := getIrType(value.ReturnType())
+		if err != nil {
+			return errors.Wrap(err, "failed to serialize argument type")
+		}
+		if native {
+			args2[i] = v.lastExpression
+		} else {
+			args2[i] = fmt.Sprintf("%s %s", irType, v.lastExpression)
+		}
 	}
 
-	method := mi.Method()
-	arglist := strings.Join(args2, " ")
+	arglist := strings.Join(args2, ", ")
 
-	if method.IsNative() {
+	if native {
 		instr, err := getInstructionName(method)
 		if err != nil {
 			return errors.Wrap(err, "failed to serialize native instruction name")
 		}
 		v.WriteString(fmt.Sprintf("%s = %s %s\n", varname, instr, arglist))
 	} else {
-		v.WriteString(fmt.Sprintf("%s = call %s (%s)\n", varname, mi.Method().Name(), arglist))
+		irType, err := getIrType(mi.ReturnType())
+		if err != nil {
+			return errors.Wrap(err, "error serializing invocation return type")
+		}
+		v.WriteString(fmt.Sprintf("%s = call %s %s(%s)\n", varname, irType, formatFunctionName(mi.Method().Name()), arglist))
 	}
 	v.lastExpression = varname
 	return nil

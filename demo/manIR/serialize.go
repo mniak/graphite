@@ -11,30 +11,29 @@ func SerializeProgram(program graphite.Program) (string, error) {
 	return visitor.String(), err
 }
 
-type writer interface {
-	WriteString(string)
-}
-
-func serializeIrType(w writer, t graphite.Type) error {
+func getIrType(t graphite.Type) (string, error) {
 	if t.IsPrimitive() {
 		switch t.Name() {
 		case "Int32":
-			w.WriteString("i32")
+			return "i32", nil
 		default:
-			return fmt.Errorf("could not serialize type %s", t.Name())
+			return "", fmt.Errorf("could not serialize type %s", t.Name())
 		}
 	} else {
-		return fmt.Errorf("dont know how to serialize non-primitive type %s", t.Name())
+		return "", fmt.Errorf("dont know how to serialize non-primitive type %s", t.Name())
 	}
-	return nil
 }
 
 func getInstructionName(m graphite.Method) (string, error) {
+	irtype, err := getIrType(m.ReturnType())
+	if err != nil {
+		return "", err
+	}
 	switch m.Name() {
 	case "+":
-		return "add", nil
+		return fmt.Sprintf("%s %s", "add", irtype), nil
 	case "*":
-		return "mul", nil
+		return fmt.Sprintf("%s %s", "mul", irtype), nil
 	default:
 		return "", fmt.Errorf("could not get instruction name for native method %s", m.Name())
 	}

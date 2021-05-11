@@ -32,15 +32,18 @@ func (v *programVisitor) serializeProgram(program graphite.Program) error {
 
 	}
 
-	v.sb.WriteString("\n")
-
+	v.sb.WriteString("\ndefine i32 @main() {\n")
+	v.sb.Indent()
 	valueVisitor := valueVisitor{
 		parent: v,
 	}
 	err = program.Entrypoint().AcceptValueVisitor(&valueVisitor)
-	v.sb.WriteString(fmt.Sprintf("; ret %s\n", valueVisitor.lastExpression))
+	v.sb.WriteString(fmt.Sprintf("ret i32 %s\n", valueVisitor.lastExpression))
 	if err != nil {
 		return errors.Wrap(err, "failed to serialize statement")
 	}
+
+	v.sb.Dedent()
+	v.sb.WriteString("}")
 	return nil
 }

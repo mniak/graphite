@@ -23,10 +23,11 @@ func (v *methodVisitor) Dedent() {
 }
 
 func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
-	v.WriteString("define ")
-	v.WriteString("@")
-	v.WriteString(m.Name())
-	v.WriteString("(")
+	irReturnType, err := getIrType(m.ReturnType())
+	if err != nil {
+		return errors.Wrap(err, "error serializing method return type")
+	}
+	v.WriteString(fmt.Sprintf("define %s %s(", irReturnType, formatFunctionName(m.Name())))
 	params := m.Parameters()
 	first := true
 	for _, param := range params {
@@ -35,11 +36,11 @@ func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 		} else {
 			v.WriteString(", ")
 		}
-		err := serializeIrType(v, param.ReturnType())
+		irType, err := getIrType(param.ReturnType())
 		if err != nil {
 			return errors.Wrap(err, "error serializing parameter return type")
 		}
-		v.WriteString(fmt.Sprintf(" %s", formatParameterName(param.Name())))
+		v.WriteString(fmt.Sprintf("%s %s", irType, formatParameterName(param.Name())))
 	}
 	v.WriteString(") {\n")
 	v.Indent()
@@ -47,14 +48,17 @@ func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	valueVisitor := valueVisitor{
 		parent: v.parent,
 	}
-	err := m.Body().AcceptValueVisitor(&valueVisitor)
-	v.WriteString(fmt.Sprintf("ret %s\n", valueVisitor.lastExpression))
+	err = m.Body().AcceptValueVisitor(&valueVisitor)
+	if err != nil {
+		return errors.Wrap(err, "error serializing value")
+	}
+	v.WriteString(fmt.Sprintf("ret %s %s\n", irReturnType, valueVisitor.lastExpression))
 
 	v.Dedent()
 	v.WriteString("}\n")
 	return err
 }
 
-func (v *methodVisitor) VisitNativeOperation(m graphite.NativeOperation) error {
+func (v *methodVisitor) VisitNativeOperation(graphite.NativeOperation) error {
 	return nil
 }
