@@ -1,9 +1,4 @@
-package graphite
-
-type Type interface {
-	IsPrimitive() bool
-	GetName() string
-}
+package native
 
 type primitiveType struct {
 	name string
@@ -13,10 +8,14 @@ func (p primitiveType) IsPrimitive() bool {
 	return true
 }
 
-func (p primitiveType) GetName() string {
+func (p primitiveType) Name() string {
 	return p.name
 }
 
-func PrimitiveString() Type {
+func TypeString() primitiveType {
 	return primitiveType{"String"}
+}
+
+func TypeInt32() primitiveType {
+	return primitiveType{"Int32"}
 }

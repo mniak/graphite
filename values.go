@@ -1,8 +1,15 @@
 package graphite
 
-type IValue interface {
+type ValueDispatcher interface {
+	AcceptValueVisitor(visitor ValueVisitor) error
+}
+type ValueVisitor interface {
+	VisitInvocation(i Invocation) error
+	VisitParameterValue(v ParameterValue) error
+	VisitInt32Literal(i int32) error
 }
 
-type StringLiteral struct {
-	Value string
+type Value interface {
+	ValueDispatcher
+	ReturnType() Type
 }
