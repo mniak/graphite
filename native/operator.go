@@ -6,9 +6,14 @@ import (
 )
 
 type binaryOperator struct {
-	name  string
-	aType graphite.Type
-	bType graphite.Type
+	name   string
+	aType  graphite.Type
+	bType  graphite.Type
+	native bool
+}
+
+func (o *binaryOperator) IsNative() bool {
+	return o.native
 }
 
 func (o *binaryOperator) AcceptMethodVisitor(visitor graphite.MethodVisitor) error {
@@ -31,15 +36,17 @@ func (o *binaryOperator) ReturnType() graphite.Type {
 }
 
 var int32Mult = binaryOperator{
-	name:  "*",
-	aType: TypeInt32(),
-	bType: TypeInt32(),
+	name:   "*",
+	aType:  TypeInt32(),
+	bType:  TypeInt32(),
+	native: true,
 }
 
 var int32Add = binaryOperator{
-	name:  "+",
-	aType: TypeInt32(),
-	bType: TypeInt32(),
+	name:   "+",
+	aType:  TypeInt32(),
+	bType:  TypeInt32(),
+	native: true,
 }
 
 func OperatorInt32Addition() *binaryOperator {

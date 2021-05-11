@@ -13,6 +13,7 @@ type Method interface {
 	Name() string
 	Parameters() []Parameter
 	ReturnType() Type
+	IsNative() bool
 }
 
 type InternalMethod interface {

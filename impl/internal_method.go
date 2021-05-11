@@ -8,6 +8,10 @@ type internalMethod struct {
 	statement  graphite.Value
 }
 
+func (m *internalMethod) IsNative() bool {
+	return false
+}
+
 func (m *internalMethod) Body() graphite.Value {
 	return m.statement
 }

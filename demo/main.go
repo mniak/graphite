@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/mniak/graphite"
-	"github.com/mniak/graphite/demo/lisp"
+	"github.com/mniak/graphite/demo/manIR"
 	"github.com/mniak/graphite/impl"
 	"github.com/mniak/graphite/native"
 	"log"
@@ -40,13 +40,9 @@ func main() {
 
 	program := impl.ProgramWithoutLibraries(entryPoint)
 
-	//code, err := serialization.Serialize(program)
-	//if err != nil {
-	//	log.Fatalln(err.Error())
-	//}
-	//fmt.Println(code)
-
-	code, err := lisp.Serialize(program)
+	//code, err := serialization.SerializeProgram(program)
+	//code, err := lisp.SerializeProgram(program)
+	code, err := manIR.SerializeProgram(program)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}

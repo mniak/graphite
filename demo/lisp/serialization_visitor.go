@@ -5,6 +5,7 @@ import (
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/find"
 	"github.com/pkg/errors"
+	"strconv"
 )
 
 type visitor struct {
@@ -59,7 +60,7 @@ func (v *visitor) VisitInvocation(mi graphite.Invocation) error {
 }
 
 func (v *visitor) VisitInt32Literal(i int32) error {
-	v.sb.WriteString(fmt.Sprintf("[int32] %d", i))
+	v.sb.WriteString(strconv.Itoa(int(i)))
 	return nil
 }
 
