@@ -1,15 +1,16 @@
-package main
+package render
 
 import (
-	"fmt"
 	"github.com/mniak/graphite"
-	"github.com/mniak/graphite/demo/manIR"
 	"github.com/mniak/graphite/impl"
 	"github.com/mniak/graphite/native"
-	"log"
+	"github.com/mniak/graphite/render/lisp"
+	"github.com/mniak/graphite/render/manIR"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func main() {
+func MakeProgram() graphite.Program {
 	/*
 		int f(int a, int b) {
 			return a + 2*b;
@@ -39,12 +40,33 @@ func main() {
 	})
 
 	program := impl.ProgramWithoutLibraries(entryPoint)
+	return program
+}
 
-	//code, err := human.SerializeProgram(program)
-	//code, err := lisp.SerializeProgram(program)
+func TestIR(t *testing.T) {
+	program := MakeProgram()
 	code, err := manIR.SerializeProgram(program)
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-	fmt.Println(code)
+	assert.NoError(t, err)
+	assert.Equal(t, `define i32 @f(i32 %param_a, i32 %param_b) {
+  %var_1 = mul i32 2, %param_b
+  %var_0 = add i32 %param_a, %var_1
+  ret i32 %var_0
+}
+
+define i32 @main() {
+  %var_0 = call i32 @f(i32 10, i32 20)
+  ret i32 %var_0
+}
+`, code)
+}
+
+func TestLisp(t *testing.T) {
+	program := MakeProgram()
+	code, err := lisp.SerializeProgram(program)
+	assert.NoError(t, err)
+	assert.Equal(t, `(defun f (a b)
+  (+ a (* 2 b)))
+
+(f 10 20)
+`, code)
 }

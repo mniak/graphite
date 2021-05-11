@@ -1,9 +1,9 @@
-package main
+package render
 
 //
 //import (
 //	"fmt"
-//	"github.com/mniak/graphite/demo/human"
+//	"github.com/mniak/graphite/render/human"
 //	"log"
 //)
 //import "github.com/mniak/graphite"

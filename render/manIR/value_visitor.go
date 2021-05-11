@@ -3,27 +3,28 @@ package manIR
 import (
 	"fmt"
 	"github.com/mniak/graphite"
+	"github.com/mniak/graphite/render/writer"
 	"github.com/pkg/errors"
 	"strconv"
 	"strings"
 )
 
 type valueVisitor struct {
-	parent         *programVisitor
+	writer         writer.Writer
 	varcount       int
 	lastExpression string
 }
 
 func (v *valueVisitor) WriteString(str string) {
-	v.parent.sb.WriteString(str)
+	v.writer.WriteString(str)
 }
 
 func (v *valueVisitor) Indent() {
-	v.parent.sb.Indent()
+	v.writer.Indent()
 }
 
 func (v *valueVisitor) Dedent() {
-	v.parent.sb.Dedent()
+	v.writer.Dedent()
 }
 
 func (v *valueVisitor) newvar() string {

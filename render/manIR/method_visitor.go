@@ -3,23 +3,12 @@ package manIR
 import (
 	fmt "fmt"
 	"github.com/mniak/graphite"
+	"github.com/mniak/graphite/render/writer"
 	"github.com/pkg/errors"
 )
 
 type methodVisitor struct {
-	parent *programVisitor
-}
-
-func (v *methodVisitor) WriteString(str string) {
-	v.parent.sb.WriteString(str)
-}
-
-func (v *methodVisitor) Indent() {
-	v.parent.sb.Indent()
-}
-
-func (v *methodVisitor) Dedent() {
-	v.parent.sb.Dedent()
+	writer writer.Writer
 }
 
 func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
@@ -27,35 +16,35 @@ func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	if err != nil {
 		return errors.Wrap(err, "error serializing method return type")
 	}
-	v.WriteString(fmt.Sprintf("define %s %s(", irReturnType, formatFunctionName(m.Name())))
+	v.writer.WriteString(fmt.Sprintf("define %s %s(", irReturnType, formatFunctionName(m.Name())))
 	params := m.Parameters()
 	first := true
 	for _, param := range params {
 		if first {
 			first = false
 		} else {
-			v.WriteString(", ")
+			v.writer.WriteString(", ")
 		}
 		irType, err := getIrType(param.ReturnType())
 		if err != nil {
 			return errors.Wrap(err, "error serializing parameter return type")
 		}
-		v.WriteString(fmt.Sprintf("%s %s", irType, formatParameterName(param.Name())))
+		v.writer.WriteString(fmt.Sprintf("%s %s", irType, formatParameterName(param.Name())))
 	}
-	v.WriteString(") {\n")
-	v.Indent()
+	v.writer.WriteString(") {\n")
+	v.writer.Indent()
 
 	valueVisitor := valueVisitor{
-		parent: v.parent,
+		writer: v.writer,
 	}
 	err = m.Body().AcceptValueVisitor(&valueVisitor)
 	if err != nil {
 		return errors.Wrap(err, "error serializing value")
 	}
-	v.WriteString(fmt.Sprintf("ret %s %s\n", irReturnType, valueVisitor.lastExpression))
+	v.writer.WriteString(fmt.Sprintf("ret %s %s\n", irReturnType, valueVisitor.lastExpression))
 
-	v.Dedent()
-	v.WriteString("}\n")
+	v.writer.Dedent()
+	v.writer.WriteString("}\n")
 	return err
 }
 
