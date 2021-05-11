@@ -40,7 +40,7 @@ func main() {
 
 	program := impl.ProgramWithoutLibraries(entryPoint)
 
-	//code, err := serialization.SerializeProgram(program)
+	//code, err := human.SerializeProgram(program)
 	//code, err := lisp.SerializeProgram(program)
 	code, err := manIR.SerializeProgram(program)
 	if err != nil {

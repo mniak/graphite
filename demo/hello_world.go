@@ -3,7 +3,7 @@ package main
 //
 //import (
 //	"fmt"
-//	"github.com/mniak/graphite/demo/serialization"
+//	"github.com/mniak/graphite/demo/human"
 //	"log"
 //)
 //import "github.com/mniak/graphite"
@@ -51,7 +51,7 @@ package main
 //			},
 //		},
 //	}
-//	code, err := serialization.SerializeProgram(program)
+//	code, err := human.SerializeProgram(program)
 //	if err != nil {
 //		log.Fatalln(err.Error())
 //	}
