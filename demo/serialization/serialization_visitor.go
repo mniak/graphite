@@ -11,10 +11,14 @@ type visitor struct {
 	sb indentedStringBuilder
 }
 
+func (v *visitor) String() string {
+	return v.sb.String()
+}
+
 func (v *visitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	v.sb.WriteString(fmt.Sprintf("DECL %s (", m.Name()))
 	for _, param := range m.Parameters() {
-		v.forParameter(param)
+		v.serializeParameter(param)
 	}
 	v.sb.WriteString(fmt.Sprintf(") -> %s", m.ReturnType().Name()))
 	return nil
@@ -23,15 +27,6 @@ func (v *visitor) VisitInternalMethod(m graphite.InternalMethod) error {
 func (v *visitor) VisitNativeOperator(o graphite.NativeOperator) error {
 	v.sb.WriteString("<native operator/>\n")
 	return nil
-}
-
-func (v *visitor) forParameter(p graphite.Parameter) error {
-	v.sb.WriteString("<parameter/>\n")
-	return nil
-}
-
-func (v *visitor) String() string {
-	return v.sb.String()
 }
 
 func (v *visitor) VisitInvocation(mi graphite.Invocation) error {
@@ -82,5 +77,10 @@ func (v *visitor) serializeProgram(program graphite.Program) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to serialize statement")
 	}
+	return nil
+}
+
+func (v *visitor) serializeParameter(p graphite.Parameter) error {
+	v.sb.WriteString(fmt.Sprintf("{[%s] %s}", p.ReturnType().Name(), p.Name()))
 	return nil
 }

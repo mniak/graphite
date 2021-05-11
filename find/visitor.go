@@ -21,7 +21,10 @@ func (v *findVisitor) VisitProgram(p graphite.Program) error {
 
 func (v *findVisitor) VisitInvocation(i graphite.Invocation) error {
 	v.check(i)
-	i.Method().AcceptMethodVisitor(v)
+	err := i.Method().AcceptMethodVisitor(v)
+	if err != nil {
+		return err
+	}
 	args := i.Arguments()
 	for _, arg := range args {
 		err := v.findInArgument(arg)
@@ -45,22 +48,20 @@ func (v *findVisitor) VisitInt32Literal(i int32) error {
 
 func (v *findVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	v.check(m)
-	v.findInParameters(m.Parameters())
+	for _, param := range m.Parameters() {
+		v.check(param)
+	}
 	return nil
 }
 
 func (v *findVisitor) VisitNativeOperator(o graphite.NativeOperator) error {
 	v.check(o)
-	v.findInParameters(o.Parameters())
-	return nil
-}
-
-func (v *findVisitor) findInParameters(params []graphite.Parameter) error {
-	for _, param := range params {
+	for _, param := range o.Parameters() {
 		v.check(param)
 	}
 	return nil
 }
+
 func (v *findVisitor) findInArgument(a graphite.Argument) error {
 	v.check(a)
 	v.check(a.Parameter())
