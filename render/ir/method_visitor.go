@@ -3,18 +3,21 @@ package ir
 import (
 	llvmir "github.com/llir/llvm/ir"
 	"github.com/mniak/graphite"
+	"github.com/mniak/graphite/render/ir/context"
 )
 
 type methodVisitor struct {
 	irModule *llvmir.Module
 	irMethod *llvmir.Func
 	scope    scope
+	context  context.ProgramContext
 }
 
-func newMethodVisitor(m *llvmir.Module) graphite.MethodVisitor {
+func newMethodVisitor(m *llvmir.Module, context context.ProgramContext) graphite.MethodVisitor {
 	return methodVisitor{
 		irModule: m,
 		scope:    newScope(),
+		context:  context,
 	}
 }
 
@@ -35,13 +38,13 @@ func (v methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	}
 	irFn := v.irModule.NewFunc(m.Name(), irType, irParams...)
 	irBody := irFn.NewBlock("body")
-	vv := newValueVisitor(irBody, v.scope)
+	vv := newValueVisitor(irBody, v.scope, v.context.NewMethodContext())
 	err = m.Body().AcceptValueVisitor(vv)
 	if err != nil {
 		return err
 	}
 	irBody.NewRet(vv.lastIrValue)
-	v.irMethod = irFn
+	v.irMethod = v.context.RegisterFunction(m, irFn)
 	return nil
 }
 
