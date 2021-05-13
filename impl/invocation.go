@@ -20,7 +20,7 @@ func (i invocation) AcceptValueVisitor(visitor graphite.ValueVisitor) error {
 }
 
 func (i invocation) ReturnType() graphite.Type {
-	return i.method.ReturnType()
+	return i.method.Type()
 }
 
 func NewInvocation(method graphite.Method, args []graphite.Argument) invocation {

@@ -20,10 +20,15 @@ func (o *binaryOperation) AcceptMethodVisitor(visitor graphite.MethodVisitor) er
 	return visitor.VisitNativeOperation(o)
 }
 
+const (
+	BINARY_OPERATOR_FIRST_PARAM  = "a"
+	BINARY_OPERATOR_SECOND_PARAM = "b"
+)
+
 func (o *binaryOperation) Parameters() []graphite.Parameter {
 	return []graphite.Parameter{
-		impl.NewParameter("a", TypeInt32()),
-		impl.NewParameter("b", TypeInt32()),
+		impl.NewParameter(BINARY_OPERATOR_FIRST_PARAM, TypeInt32()),
+		impl.NewParameter(BINARY_OPERATOR_SECOND_PARAM, TypeInt32()),
 	}
 }
 
@@ -31,7 +36,7 @@ func (o *binaryOperation) Name() string {
 	return o.name
 }
 
-func (o *binaryOperation) ReturnType() graphite.Type {
+func (o *binaryOperation) Type() graphite.Type {
 	return TypeInt32()
 }
 

@@ -2,8 +2,9 @@ package find
 
 import (
 	"fmt"
-	"github.com/mniak/graphite"
 	"reflect"
+
+	"github.com/mniak/graphite"
 )
 
 func Find(node interface{}, match func(interface{}) bool) ([]interface{}, error) {

@@ -6,5 +6,5 @@ type Program interface {
 
 type Parameter interface {
 	Name() string
-	ReturnType() Type
+	Type() Type
 }

@@ -36,6 +36,6 @@ func (m *internalMethod) Parameters() []graphite.Parameter {
 	return m.parameters
 }
 
-func (m *internalMethod) ReturnType() graphite.Type {
+func (m *internalMethod) Type() graphite.Type {
 	return m.statement.ReturnType()
 }

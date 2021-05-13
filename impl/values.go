@@ -6,20 +6,20 @@ type parameterValue struct {
 	param graphite.Parameter
 }
 
-func (p parameterValue) Parameter() graphite.Parameter {
+func (p *parameterValue) Parameter() graphite.Parameter {
 	return p.param
 }
 
-func (p parameterValue) AcceptValueVisitor(visitor graphite.ValueVisitor) error {
+func (p *parameterValue) AcceptValueVisitor(visitor graphite.ValueVisitor) error {
 	return visitor.VisitParameterValue(p)
 }
 
-func (p parameterValue) ReturnType() graphite.Type {
-	return p.param.ReturnType()
+func (p *parameterValue) ReturnType() graphite.Type {
+	return p.param.Type()
 }
 
-func ValueFromParameter(param graphite.Parameter) parameterValue {
-	return parameterValue{
+func ValueFromParameter(param graphite.Parameter) graphite.ParameterValue {
+	return &parameterValue{
 		param: param,
 	}
 }
