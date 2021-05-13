@@ -23,3 +23,7 @@ body:
 }
 `, code)
 }
+
+func TestHelloWorld(t *testing.T) {
+
+}
