@@ -5,6 +5,7 @@ type Invocation interface {
 	Method() Method
 	Arguments() []Argument
 }
+
 type Argument interface {
 	Parameter() Parameter
 	Value() Value

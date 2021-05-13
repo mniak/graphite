@@ -1,8 +1,9 @@
 package native
 
 import (
-	"github.com/mniak/graphite"
 	"testing"
+
+	"github.com/mniak/graphite"
 )
 
 func TestPrimitiveType_Interface(t *testing.T) {

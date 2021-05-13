@@ -14,6 +14,7 @@ func (v *findVisitor) check(x interface{}) {
 		v.results = append(v.results, x)
 	}
 }
+
 func (v *findVisitor) VisitProgram(p graphite.Program) error {
 	v.check(p)
 	return p.Entrypoint().AcceptValueVisitor(v)

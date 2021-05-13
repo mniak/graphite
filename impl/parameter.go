@@ -11,7 +11,7 @@ func (p parameter) Name() string {
 	return p.name
 }
 
-func (p parameter) ReturnType() graphite.Type {
+func (p parameter) Type() graphite.Type {
 	return p.theType
 }
 

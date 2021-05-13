@@ -1,8 +1,9 @@
 package lisp
 
 import (
-	"github.com/mniak/graphite"
 	"testing"
+
+	"github.com/mniak/graphite"
 )
 
 func TestInterface(t *testing.T) {

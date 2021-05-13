@@ -2,10 +2,11 @@ package lisp
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/render/writer"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 type visitor struct {

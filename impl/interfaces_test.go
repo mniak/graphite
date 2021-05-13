@@ -1,8 +1,9 @@
 package impl
 
 import (
-	"github.com/mniak/graphite"
 	"testing"
+
+	"github.com/mniak/graphite"
 )
 
 func TestProgram_Interface(t *testing.T) {

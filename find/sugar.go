@@ -1,8 +1,9 @@
 package find
 
 import (
-	"github.com/mniak/graphite"
 	"reflect"
+
+	"github.com/mniak/graphite"
 )
 
 func Methods(root interface{}) (result []graphite.Method, err error) {

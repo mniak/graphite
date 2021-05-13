@@ -31,7 +31,7 @@ func (o *binaryOperation) Name() string {
 	return o.name
 }
 
-func (o *binaryOperation) ReturnType() graphite.Type {
+func (o *binaryOperation) Type() graphite.Type {
 	return TypeInt32()
 }
 

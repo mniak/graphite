@@ -1,7 +1,8 @@
-package ir_manual
+package manualIR
 
 import (
 	"fmt"
+
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/find"
 	"github.com/mniak/graphite/render/writer"
@@ -56,7 +57,7 @@ func getIrType(t graphite.Type) (string, error) {
 }
 
 func getInstructionName(m graphite.Method) (string, error) {
-	irtype, err := getIrType(m.ReturnType())
+	irtype, err := getIrType(m.Type())
 	if err != nil {
 		return "", err
 	}

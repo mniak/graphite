@@ -1,7 +1,8 @@
-package ir_manual
+package manualIR
 
 import (
 	fmt "fmt"
+
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/render/writer"
 	"github.com/pkg/errors"
@@ -12,7 +13,7 @@ type methodVisitor struct {
 }
 
 func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
-	irReturnType, err := getIrType(m.ReturnType())
+	irReturnType, err := getIrType(m.Type())
 	if err != nil {
 		return errors.Wrap(err, "error serializing method return type")
 	}
@@ -25,7 +26,7 @@ func (v *methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 		} else {
 			v.writer.WriteString(", ")
 		}
-		irType, err := getIrType(param.ReturnType())
+		irType, err := getIrType(param.Type())
 		if err != nil {
 			return errors.Wrap(err, "error serializing parameter return type")
 		}

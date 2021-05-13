@@ -1,4 +1,4 @@
-package ir_manual
+package manualIR
 
 import "fmt"
 

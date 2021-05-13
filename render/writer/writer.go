@@ -60,6 +60,7 @@ func (w *writer) Dedent() {
 		w.indentation -= INDENTATION
 	}
 }
+
 func (w *writer) String() string {
 	return w.sb.String()
 }

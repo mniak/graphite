@@ -1,12 +1,13 @@
-package ir_manual
+package manualIR
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/render/writer"
 	"github.com/pkg/errors"
-	"strconv"
-	"strings"
 )
 
 type valueVisitor struct {
