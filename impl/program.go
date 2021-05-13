@@ -5,6 +5,7 @@ import (
 )
 
 type program struct {
+	methods    []graphite.Method
 	entrypoint graphite.Value
 }
 
@@ -12,8 +13,9 @@ func (p program) Entrypoint() graphite.Value {
 	return p.entrypoint
 }
 
-func ProgramWithoutLibraries(entrypoint graphite.Value) program {
+func ProgramWithoutLibraries(methods []graphite.Method, entrypoint graphite.Value) program {
 	return program{
+		methods:    methods,
 		entrypoint: entrypoint,
 	}
 }
