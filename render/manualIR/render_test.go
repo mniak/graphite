@@ -1,4 +1,4 @@
-package render
+package manualIR
 
 import (
 	"testing"
@@ -6,13 +6,10 @@ import (
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/impl"
 	"github.com/mniak/graphite/native"
-	"github.com/mniak/graphite/render/ir"
-	"github.com/mniak/graphite/render/lisp"
-	"github.com/mniak/graphite/render/manualIR"
 	"github.com/stretchr/testify/assert"
 )
 
-func MakeProgram() graphite.Program {
+func TestSimpleProgram(t *testing.T) {
 	/*
 		int f(int a, int b) {
 			return a + 2*b;
@@ -42,12 +39,8 @@ func MakeProgram() graphite.Program {
 	})
 
 	program := impl.ProgramWithoutLibraries(entryPoint)
-	return program
-}
 
-func TestManualIR(t *testing.T) {
-	program := MakeProgram()
-	code, err := manualIR.SerializeProgram(program)
+	code, err := SerializeProgram(program)
 	assert.NoError(t, err)
 	assert.Equal(t, `define i32 @f(i32 %param_a, i32 %param_b) {
   %var_1 = mul i32 2, %param_b
@@ -59,34 +52,5 @@ define i32 @main() {
   %var_0 = call i32 @f(i32 10, i32 20)
   ret i32 %var_0
 }
-`, code)
-}
-
-func TestIR(t *testing.T) {
-	program := MakeProgram()
-	code, err := ir.SerializeProgram(program)
-	assert.NoError(t, err)
-	assert.Equal(t, `define i32 @f(i32 %a, i32 %b) {
-body:
-	%0 = mul i32 2, %b
-	%1 = add i32 %a, %1
-	ret i32 %0
-}
-
-define i32 @main() {
-  %0 = call i32 @f(i32 10, i32 20)
-  ret i32 %0
-}
-`, code)
-}
-
-func TestLisp(t *testing.T) {
-	program := MakeProgram()
-	code, err := lisp.SerializeProgram(program)
-	assert.NoError(t, err)
-	assert.Equal(t, `(defun f (a b)
-  (+ a (* 2 b)))
-
-(f 10 20)
 `, code)
 }

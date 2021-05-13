@@ -1,6 +1,7 @@
 package ir
 
 import (
+	"fmt"
 	llvmir "github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
@@ -34,9 +35,19 @@ func (v valueVisitor) VisitInvocation(i graphite.Invocation) (value.Value, error
 		}
 		irArgs[idx] = irArg
 	}
-	irFunc := v.context.GetFunction(i.Method())
-
-	return v.irBlock.NewCall(irFunc, irArgs...), nil
+	method := i.Method()
+	if method.IsNative() {
+		methodName := method.Name()
+		switch methodName {
+		case "*":
+			return v.irBlock.NewAdd(irArgs[0], irArgs[1]), nil
+		default:
+			return nil, fmt.Errorf("could not produce invocation of native method %s", methodName)
+		}
+	} else {
+		irFunc := v.context.GetFunction(i.Method())
+		return v.irBlock.NewCall(irFunc, irArgs...), nil
+	}
 }
 
 func (v valueVisitor) VisitParameterValue(pv graphite.ParameterValue) (value.Value, error) {

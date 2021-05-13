@@ -11,7 +11,8 @@ func (p parameterValue) Parameter() graphite.Parameter {
 }
 
 func (p parameterValue) AcceptValueVisitor(visitor graphite.ValueVisitor) error {
-	return visitor.VisitParameterValue(p)
+	result := visitor.VisitParameterValue(p)
+	return result
 }
 
 func (p parameterValue) ReturnType() graphite.Type {

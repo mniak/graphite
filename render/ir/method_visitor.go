@@ -30,17 +30,18 @@ func (v methodVisitor) VisitInternalMethod(m graphite.InternalMethod) (value.Val
 	}
 	params := m.Parameters()
 	irParams := make([]*llvmir.Param, len(params))
+	methodContext := v.context.NewMethodContext()
 	for i, param := range params {
 		irType, err = getIrType(param.Type())
 		if err != nil {
 			return nil, err
 		}
 		irParam := llvmir.NewParam(param.Name(), irType)
-		irParams[i] = irParam
+		irParams[i] = methodContext.RegisterParameter(param, irParam)
 	}
 	irFn := v.irModule.NewFunc(m.Name(), irType, irParams...)
 	irBody := irFn.NewBlock("body")
-	vv := newValueVisitor(irBody, v.scope, v.context.NewMethodContext())
+	vv := newValueVisitor(irBody, v.scope, methodContext)
 	val, err := wrappers.WrapValueDispatcher(m.Body()).AcceptValueVisitor(vv)
 	if err != nil {
 		return nil, err
@@ -49,6 +50,6 @@ func (v methodVisitor) VisitInternalMethod(m graphite.InternalMethod) (value.Val
 	return v.context.RegisterFunction(m, irFn), nil
 }
 
-func (v methodVisitor) VisitNativeOperation(m graphite.NativeOperation) (value.Value, error) {
+func (v methodVisitor) VisitNativeOperation(graphite.NativeOperation) (value.Value, error) {
 	return nil, nil
 }
