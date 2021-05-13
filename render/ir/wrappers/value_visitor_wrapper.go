@@ -16,26 +16,26 @@ type irValueVisitor struct {
 	lastValue value.Value
 }
 
-func (v irValueVisitor) VisitInvocation(i graphite.Invocation) error {
+func (v *irValueVisitor) VisitInvocation(i graphite.Invocation) error {
 	val, err := v.inner.VisitInvocation(i)
 	v.lastValue = val
 	return err
 }
 
-func (v irValueVisitor) VisitParameterValue(pv graphite.ParameterValue) error {
+func (v *irValueVisitor) VisitParameterValue(pv graphite.ParameterValue) error {
 	val, err := v.inner.VisitParameterValue(pv)
 	v.lastValue = val
 	return err
 }
 
-func (v irValueVisitor) VisitInt32Literal(i int32) error {
+func (v *irValueVisitor) VisitInt32Literal(i int32) error {
 	val, err := v.inner.VisitInt32Literal(i)
 	v.lastValue = val
 	return err
 }
 
-func WrapValueVisitor(v IRValueVisitor) irValueVisitor {
-	return irValueVisitor{
+func WrapValueVisitor(v IRValueVisitor) *irValueVisitor {
+	return &irValueVisitor{
 		inner: v,
 	}
 }
@@ -48,14 +48,14 @@ type irValueDispatcher struct {
 	inner graphite.ValueDispatcher
 }
 
-func (d irValueDispatcher) AcceptValueVisitor(v IRValueVisitor) (value.Value, error) {
+func (d *irValueDispatcher) AcceptValueVisitor(v IRValueVisitor) (value.Value, error) {
 	wrapper := WrapValueVisitor(v)
 	err := d.inner.AcceptValueVisitor(wrapper)
 	return wrapper.lastValue, err
 }
 
 func WrapValueDispatcher(d graphite.ValueDispatcher) IRValueDispatcher {
-	return irValueDispatcher{
+	return &irValueDispatcher{
 		inner: d,
 	}
 }

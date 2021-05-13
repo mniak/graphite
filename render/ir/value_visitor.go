@@ -40,6 +40,8 @@ func (v valueVisitor) VisitInvocation(i graphite.Invocation) (value.Value, error
 		methodName := method.Name()
 		switch methodName {
 		case "*":
+			return v.irBlock.NewMul(irArgs[0], irArgs[1]), nil
+		case "+":
 			return v.irBlock.NewAdd(irArgs[0], irArgs[1]), nil
 		default:
 			return nil, fmt.Errorf("could not produce invocation of native method %s", methodName)
