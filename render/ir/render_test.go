@@ -17,8 +17,9 @@ body:
 }
 
 define i32 @main() {
-  %0 = call i32 @f(i32 10, i32 20)
-  ret i32 %0
+body:
+	%0 = call i32 @f(i32 10, i32 20)
+	ret i32 %0
 }
 `, code)
 }

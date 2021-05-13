@@ -2,6 +2,7 @@ package ir
 
 import (
 	llvmir "github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/types"
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/find"
 	"github.com/mniak/graphite/render/ir/context"
@@ -21,10 +22,21 @@ func SerializeProgram(program graphite.Program) (string, error) {
 		methodVisitor := newMethodVisitor(m, ctx)
 		_, err := wrappers.WrapMethodDispatcher(method).AcceptMethodVisitor(methodVisitor)
 		if err != nil {
-			return "", errors.Wrap(err, "error serializing method")
+			return "", err
 		}
 	}
 
+	entrypoint := program.Entrypoint()
+	if entrypoint != nil {
+		mainFn := m.NewFunc("main", types.I32)
+		mainBlock := mainFn.NewBlock("body")
+		visitor := newValueVisitor(mainBlock, newScope(), ctx.NewMethodContext())
+		result, err := wrappers.WrapValueDispatcher(entrypoint).AcceptValueVisitor(visitor)
+		if err != nil {
+			return "", err
+		}
+		mainBlock.NewRet(result)
+	}
 	//w.WriteString("\ndefine i32 @main() {\n")
 	//w.Indent()
 	//valueVisitor := newValueVisitor(w)
