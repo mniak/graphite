@@ -5,6 +5,7 @@ import (
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/find"
 	"github.com/mniak/graphite/render/ir/context"
+	"github.com/mniak/graphite/render/ir/wrappers"
 	"github.com/pkg/errors"
 )
 
@@ -18,7 +19,7 @@ func SerializeProgram(program graphite.Program) (string, error) {
 	ctx := context.NewProgramContext()
 	for _, method := range methods {
 		methodVisitor := newMethodVisitor(m, ctx)
-		err := method.AcceptMethodVisitor(methodVisitor)
+		_, err := wrappers.WrapMethodDispatcher(method).AcceptMethodVisitor(methodVisitor)
 		if err != nil {
 			return "", errors.Wrap(err, "error serializing method")
 		}

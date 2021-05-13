@@ -7,16 +7,16 @@ import (
 	"github.com/llir/llvm/ir/value"
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/render/ir/context"
+	"github.com/mniak/graphite/render/ir/wrappers"
 )
 
 type valueVisitor struct {
-	irBlock     *llvmir.Block
-	scope       scope
-	context     context.MethodContext
-	lastIrValue value.Value
+	irBlock *llvmir.Block
+	scope   scope
+	context context.MethodContext
 }
 
-func newValueVisitor(b *llvmir.Block, s scope, context context.MethodContext) valueVisitor {
+func newValueVisitor(b *llvmir.Block, s scope, context context.MethodContext) wrappers.IRValueVisitor {
 	return valueVisitor{
 		irBlock: b,
 		scope:   s,
@@ -24,28 +24,25 @@ func newValueVisitor(b *llvmir.Block, s scope, context context.MethodContext) va
 	}
 }
 
-func (v valueVisitor) VisitInvocation(i graphite.Invocation) error {
+func (v valueVisitor) VisitInvocation(i graphite.Invocation) (value.Value, error) {
 	args := i.Arguments()
 	irArgs := make([]value.Value, len(args))
 	for idx, arg := range args {
-		err := arg.Value().AcceptValueVisitor(v)
+		irArg, err := wrappers.WrapValueDispatcher(arg.Value()).AcceptValueVisitor(v)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		irArgs[idx] = v.lastIrValue
+		irArgs[idx] = irArg
 	}
 	irFunc := v.context.GetFunction(i.Method())
-	v.irBlock.NewCall(irFunc, irArgs...)
-	return nil
+
+	return v.irBlock.NewCall(irFunc, irArgs...), nil
 }
 
-func (v valueVisitor) VisitParameterValue(pv graphite.ParameterValue) error {
-	param := pv.Parameter()
-	v.lastIrValue = v.context.GetParameter(param)
-	return nil
+func (v valueVisitor) VisitParameterValue(pv graphite.ParameterValue) (value.Value, error) {
+	return v.context.GetParameter(pv.Parameter()), nil
 }
 
-func (v valueVisitor) VisitInt32Literal(i int32) error {
-	v.lastIrValue = constant.NewInt(types.I32, int64(i))
-	return nil
+func (v valueVisitor) VisitInt32Literal(i int32) (value.Value, error) {
+	return constant.NewInt(types.I32, int64(i)), nil
 }

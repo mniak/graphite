@@ -20,3 +20,7 @@ func getIrType(p graphite.Type) (types.Type, error) {
 		return nil, fmt.Errorf("non primitive type %s cannot be converted to IR type. only primitives are supported at this moment", p.Name())
 	}
 }
+
+func getNativeOperator(o graphite.NativeOperation) {
+
+}

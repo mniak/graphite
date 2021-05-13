@@ -2,8 +2,10 @@ package ir
 
 import (
 	llvmir "github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/value"
 	"github.com/mniak/graphite"
 	"github.com/mniak/graphite/render/ir/context"
+	"github.com/mniak/graphite/render/ir/wrappers"
 )
 
 type methodVisitor struct {
@@ -13,7 +15,7 @@ type methodVisitor struct {
 	context  context.ProgramContext
 }
 
-func newMethodVisitor(m *llvmir.Module, context context.ProgramContext) graphite.MethodVisitor {
+func newMethodVisitor(m *llvmir.Module, context context.ProgramContext) wrappers.IRMethodVisitor {
 	return methodVisitor{
 		irModule: m,
 		scope:    newScope(),
@@ -21,17 +23,17 @@ func newMethodVisitor(m *llvmir.Module, context context.ProgramContext) graphite
 	}
 }
 
-func (v methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
+func (v methodVisitor) VisitInternalMethod(m graphite.InternalMethod) (value.Value, error) {
 	irType, err := getIrType(m.Type())
 	if err != nil {
-		return err
+		return nil, err
 	}
 	params := m.Parameters()
 	irParams := make([]*llvmir.Param, len(params))
 	for i, param := range params {
 		irType, err = getIrType(param.Type())
 		if err != nil {
-			return err
+			return nil, err
 		}
 		irParam := llvmir.NewParam(param.Name(), irType)
 		irParams[i] = irParam
@@ -39,15 +41,14 @@ func (v methodVisitor) VisitInternalMethod(m graphite.InternalMethod) error {
 	irFn := v.irModule.NewFunc(m.Name(), irType, irParams...)
 	irBody := irFn.NewBlock("body")
 	vv := newValueVisitor(irBody, v.scope, v.context.NewMethodContext())
-	err = m.Body().AcceptValueVisitor(vv)
+	val, err := wrappers.WrapValueDispatcher(m.Body()).AcceptValueVisitor(vv)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	irBody.NewRet(vv.lastIrValue)
-	v.irMethod = v.context.RegisterFunction(m, irFn)
-	return nil
+	irBody.NewRet(val)
+	return v.context.RegisterFunction(m, irFn), nil
 }
 
-func (v methodVisitor) VisitNativeOperation(m graphite.NativeOperation) error {
-	return nil
+func (v methodVisitor) VisitNativeOperation(m graphite.NativeOperation) (value.Value, error) {
+	return nil, nil
 }
