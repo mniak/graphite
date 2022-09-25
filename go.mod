@@ -1,6 +1,6 @@
 module github.com/mniak/graphite
 
-go 1.16
+go 1.19
 
 require (
 	github.com/kr/pretty v0.2.1 // indirect
